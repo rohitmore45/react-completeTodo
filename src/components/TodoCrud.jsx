@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import ToDoList from "./ToDoList";
 import AddToDo from "./AddToDo";
 import Swal from "sweetalert2";
+import WelcomeMsg from "./WelcomeMsg";
 
 export default function TodoCrud() {
-  let initialTodo = [
-    { id: 1, text: "To Do 1", completed: false },
-    { id: 2, text: "To Do 2", completed: false },
-    { id: 3, text: "To Do 3", completed: true },
-  ];
+  // let initialTodo = [
+  //   { id: 1, text: "To Do 1", completed: false, date: "2024-02-25" },
+  //   { id: 2, text: "To Do 2", completed: false, date: "2024-02-12" },
+  //   { id: 3, text: "To Do 3", completed: true, date: "2024-02-05" },
+  // ];
   let alertMsg = (msg) => {
     Swal.fire({
       title: msg,
@@ -29,13 +30,13 @@ export default function TodoCrud() {
     });
   };
 
-  let [todoArr, setToDoArr] = useState(initialTodo);
+  let [todoArr, setToDoArr] = useState("");
 
   let deleteTodo = (id, completed) => {
     let filteredToDos = todoArr.filter((todo) => todo.id !== id);
     completed
       ? setToDoArr([...filteredToDos])
-      : alertMsg("Your Todo is not completed..");
+      : alertMsg("Your Task is not completed..");
   };
 
   let toggleTodo = (id) => {
@@ -44,11 +45,18 @@ export default function TodoCrud() {
     });
     setToDoArr([...updatedToDos]);
   };
-  let handleAddTodo = (text) => {
-    if (text === "") {
+  let handleAddTodo = (text, date) => {
+    if (text === "" || date === "") {
       alertMsg("Your task is EMPTY!!");
     } else {
-      let newItem = { id: todoArr.length + 1, text: text, completed: false };
+      let newItem = {
+        id: todoArr.length + 1,
+        text: text,
+        completed: false,
+        date: date,
+      };
+      text = "";
+      date = "";
       // todoArr.push(newItem);
       let updatedToDos = [...todoArr, newItem];
       setToDoArr([...updatedToDos]);
@@ -57,10 +65,16 @@ export default function TodoCrud() {
   return (
     <>
       <h1 className="text-center m-2">ToDo APP</h1>
-      <div className="container-fluid">
+      <div className="container-fluid  rounded rounded-4 p-4">
         <div className="row">
           <div className="col-sm-7 text-center">
-            <h3 className="bg-warning p-2">Todo List</h3>
+            <h3
+              style={{ backgroundColor: "#e67e22" }}
+              className=" p-2 rounded rounded-3 "
+            >
+              Todo List
+            </h3>
+            <WelcomeMsg todoArr={todoArr} />
             <ToDoList
               todoArr={todoArr}
               deleteTodo={deleteTodo}
@@ -68,7 +82,12 @@ export default function TodoCrud() {
             />
           </div>
           <div className="col-sm-5 text-center">
-            <h3 className="bg-warning p-2">Add Todo</h3>
+            <h3
+              style={{ backgroundColor: "#e67e22" }}
+              className=" p-2 rounded rounded-3"
+            >
+              Add Todo
+            </h3>
             <AddToDo handleAddTodo={handleAddTodo} />
           </div>
         </div>
